@@ -26,10 +26,10 @@ jobs:
 
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
-        working-directory: project/secure_diary_basic
+        working-directory: Diary/secure_diary_basic
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: secure-diary-apk
-          path: project/secure_diary_basic/app/build/outputs/apk/debug/*.apk
+          path: project/Diary/secure_diary_basic/app/build/outputs/apk/debug/*.apk
