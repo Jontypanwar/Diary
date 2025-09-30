@@ -1,4 +1,4 @@
-name: Android CI - Build APK from ZIP
+name: Android CI - Build APK (no wrapper)
 
 on:
   workflow_dispatch:
@@ -13,16 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Unzip project
-        run: |
-          unzip secure_diary_basic.zip -d project
-
-      - name: Find project path
-        id: findpath
-        run: |
-          echo "PROJECT_DIR=$(find project -name gradlew -exec dirname {} \;)" >> $GITHUB_ENV
-
-      - name: Make gradlew executable
-        run: chmod +x ${{ env.PROJECT_DIR }}/gradlew
+        run: unzip secure_diary_basic.zip -d project
 
       - name: Set up JDK 11
         uses: actions/setup-java@v4
@@ -30,12 +21,15 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Install Gradle
+        uses: gradle/gradle-build-action@v2
+
       - name: Build debug APK
-        run: ${{ env.PROJECT_DIR }}/gradlew assembleDebug --no-daemon
-        working-directory: ${{ env.PROJECT_DIR }}
+        run: gradle assembleDebug --no-daemon
+        working-directory: project/secure_diary_basic
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: secure-diary-apk
-          path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/*.apk
+          path: project/secure_diary_basic/app/build/outputs/apk/debug/*.apk
