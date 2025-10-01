@@ -21,12 +21,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        working-directory: secure_diary_basic
+      - name: Install Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon
         working-directory: secure_diary_basic
 
       - name: Upload APK artifact
